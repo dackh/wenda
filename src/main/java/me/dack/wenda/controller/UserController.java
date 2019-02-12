@@ -1,0 +1,35 @@
+package me.dack.wenda.controller;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
+
+import me.dack.wenda.model.Result;
+import me.dack.wenda.service.UserService;
+
+@Controller
+@RequestMapping("/user")
+public class UserController {
+
+	@Autowired
+	private UserService userService;
+	
+	@RequestMapping("/register")
+	@ResponseBody
+	public Result register(String name,String username,String password){
+		return userService.register(name, username, password);
+	}
+	
+	@RequestMapping("/login")
+	@ResponseBody
+	public Result login(String username,String password){
+		return userService.login(username, password);
+	}
+	
+	@RequestMapping("logout")
+	@ResponseBody
+	public Result logout(int id){
+		return new Result();
+	}
+}
