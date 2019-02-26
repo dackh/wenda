@@ -14,8 +14,9 @@ import me.dack.wenda.model.Question;
 public interface QuestionDao {
 	String TABLE_NAME = "question";
 	String INSERT_FIELDS = " title, content, create_time, comment_count, status, user_id";
-	String SELECT_FIELDS = "id" + INSERT_FIELDS;
+	String SELECT_FIELDS = "id," + INSERT_FIELDS;
 	
+	@Select({"select ",SELECT_FIELDS," from ",TABLE_NAME," where user_id=#{userId} and status = 0 order by create_time desc limit #{offset} ,#{limit}"})
 	List<Question> getLatestQuestions(@Param("userId") int userId,@Param("offset")int offset,
 							@Param("limit")int limit);
 	
@@ -23,13 +24,13 @@ public interface QuestionDao {
 			") values (#{title},#{content},#{createTime},#{commentCount},#{status},#{userId})"})
 	int addQuestion(Question question);
 	
-	@Select({"select",SELECT_FIELDS,"from ",TABLE_NAME,"where id=#{id}"})
+	@Select({"select",SELECT_FIELDS,"from ",TABLE_NAME,"where id=#{id} and status = 0"})
 	Question getQuestionById(@Param("id")int id);
 	 
 	@Update({"update ",TABLE_NAME, " set comment_count = #{commentCount} where id = #{id}"})
 	int updateQuestionCount(@Param("id")int id,@Param("commentCoumt")int commentCount);
 
-	@Update({"update ",TABLE_NAME, " set title = #{title} and content = #{content} where id = #{id}"})
+	@Update({"update ",TABLE_NAME, " set title = #{title} , content = #{content} where id = #{id}"})
 	int updateQuestionTitleAndContent(@Param("id")int id,@Param("title")String title,@Param("content")String content);
 	
 	@Update({"update ",TABLE_NAME, " set status = #{status} where id = #{id}"})

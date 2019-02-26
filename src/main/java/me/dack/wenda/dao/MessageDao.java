@@ -15,7 +15,7 @@ public interface MessageDao {
 
 	String TABLE_NAME ="message";
 	String INSERT_FIELDS = " from_id, to_id, content, create_time,has_read,conversation_id";
-	String SELECT_FIELDS = " id" + INSERT_FIELDS;
+	String SELECT_FIELDS = " id," + INSERT_FIELDS;
 	
 	@Insert({"insert into",TABLE_NAME,"(",INSERT_FIELDS,
 		") values(#{fromId},#{toId},#{content},#{createTime},#{hasRead},#{conversationId})"})

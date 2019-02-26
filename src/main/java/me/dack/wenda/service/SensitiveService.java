@@ -106,7 +106,7 @@ public class SensitiveService implements InitializingBean{
 	
 	
 	/**
-	 * 过滤敏感词
+	  * 过滤敏感词
 	 */
 	public String filter(String text){
 		if(StringUtils.isBlank(text)){

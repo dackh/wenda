@@ -2,24 +2,22 @@ package me.dack.wenda.model;
 
 public class Result {
 
-	private boolean flag;
+	private Errcode errcode;
 	private String message;
 	private Object res;
 	
 	public Result(){}
-	public Result(boolean flag,String message){
-		this.flag = flag;
+	public Result(Errcode errcode,String message){
+		this.errcode = errcode;
 		this.message = message;
 	}
 	
-	public boolean isFlag() {
-		return flag;
+	public int getErrcode() {
+		return errcode.getValue();
 	}
-
-	public void setFlag(boolean flag) {
-		this.flag = flag;
+	public void setErrcode(Errcode errcode) {
+		this.errcode = errcode;
 	}
-
 	public String getMessage() {
 		return message;
 	}

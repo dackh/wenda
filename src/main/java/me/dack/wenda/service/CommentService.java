@@ -48,4 +48,8 @@ public class CommentService {
 	public List<Comment> queryComment(int entity_id,int entity_type){
 		return commentDao.queryComment(entity_id, entity_type);
 	}
+	
+	public Comment getCommentById(int id) {
+		return commentDao.getCommentById(id);
+	}
 }

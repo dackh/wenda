@@ -44,4 +44,8 @@ public class QuestionService {
 	public int deleteQuestion(int id){
 		return questionDao.updateQuestionStatus(id, 1);
 	}
+	
+	public Question getQuestionById(int id) {
+		return questionDao.getQuestionById(id);
+	}
 }
