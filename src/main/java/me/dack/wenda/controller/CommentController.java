@@ -17,9 +17,11 @@ import me.dack.wenda.model.Comment;
 import me.dack.wenda.model.EntityType;
 import me.dack.wenda.model.Errcode;
 import me.dack.wenda.model.HostHolder;
+import me.dack.wenda.model.Question;
 import me.dack.wenda.model.Result;
 import me.dack.wenda.model.User;
 import me.dack.wenda.service.CommentService;
+import me.dack.wenda.service.QuestionService;
 
 @RestController
 @RequestMapping("/comment")
@@ -33,27 +35,47 @@ public class CommentController {
 	private HostHolder hostHolder;
 	@Autowired
 	private EventProducer eventProducer;
+	@Autowired
+	private QuestionService questionService;
 	
 	@RequestMapping("addComment")
 	public Result addComment(@RequestParam("content")String content,
 			@RequestParam("entityId")int entityId,
 			@RequestParam("entityType")int entityType){
-		
 		try{	
-			Comment comment = commentService.getCommentById(commentId);
+			if (entityType == EntityType.COMMENT_ENTITY) {
+				Comment parentComment = commentService.getCommentById(entityId);
+				if (parentComment == null) {
+					return new Result(Errcode.Error,"找不到entity_id对应评论");
+				}
+				eventProducer.produceEvent(new EventModel(EventType.COMMENT)
+						.setActorId(hostHolder.getUser().getId())
+						.setEntityId(entityId)
+						.setEntityType(entityType)
+						.setEntityOwnerId(parentComment.getUserId())
+						.setExt("commentId", String.valueOf(entityId)));
+			}else if(entityType == EntityType.QUESTION_ENTITY) {
+				Question question = questionService.getQuestionById(entityId);
+				if (question == null) {
+					return new Result(Errcode.Error,"找不到entity_id对应问题");
+				}
+				eventProducer.produceEvent(new EventModel(EventType.COMMENT)
+						.setActorId(hostHolder.getUser().getId())
+						.setEntityId(entityId)
+						.setEntityType(entityType)
+						.setEntityOwnerId(question.getUserId())
+						.setExt("questionId", String.valueOf(entityId)));
+			}else {
+				return new Result(Errcode.Error,"参数entity_type值异常");
+			}
+			Comment comment = new Comment();
 			comment.setContent(content);
-			comment.setEntityId(comment.getEntityId());
-			comment.setEntityType(comment.getEntityType());
+			comment.setEntityId(entityId);
+			comment.setEntityType(entityType);
 			comment.setCreateTime(new Date());
 			comment.setStatus(0);
 			User user = hostHolder.getUser();
 			comment.setUserId(user.getId()); 
-			eventProducer.produceEvent(new EventModel(EventType.COMMENT)
-					.setActorId(hostHolder.getUser().getId())
-					.setEntityId(EntityType.COMMENT_ENTITY)
-					.setEntityOwnerId(comment.getUserId())
-					.setExt("questionId", String.valueOf(comment.getEntityId())));
-			
 			if(commentService.addComment(comment) > 0){
 				return new Result(Errcode.Null,"添加成功");
 			}
@@ -89,7 +111,8 @@ public class CommentController {
 	}
 	
 	@RequestMapping("queryComment")
-	public Result queryComment(int entity_id,int entity_type){
+	public Result queryComment(@RequestParam("entity_id")int entity_id,
+			@RequestParam("entity_type")int entity_type){
 		try{	
 			List<Comment> queryComment = commentService.queryComment(entity_id,entity_type);
 			Result result = new Result(Errcode.Null,"查找成功");

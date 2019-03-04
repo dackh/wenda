@@ -26,7 +26,7 @@ public class CommentService {
 		//敏感词过滤
 		comment.setContent(sensitiveService.filter(comment.getContent()));
 		if(comment.getEntityType() == EntityType.QUESTION_ENTITY){
-			questionDao.updateQuestionCount(comment.getEntityId(), commentDao.getCommentCount(comment.getEntityId(), EntityType.QUESTION_ENTITY));			
+//			questionDao.updateQuestionCount(comment.getEntityId(), commentDao.getCommentCount(comment.getEntityId(), EntityType.QUESTION_ENTITY));			
 		}
 		return commentDao.addComment(comment);
 	}
