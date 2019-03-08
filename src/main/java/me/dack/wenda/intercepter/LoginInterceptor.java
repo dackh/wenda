@@ -3,13 +3,10 @@ package me.dack.wenda.intercepter;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import org.apache.tomcat.util.json.JSONParser;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.web.servlet.HandlerInterceptor;
 import org.springframework.web.servlet.ModelAndView;
-
-import com.fasterxml.jackson.databind.util.JSONPObject;
 
 import me.dack.wenda.dao.UserDao;
 import me.dack.wenda.model.Errcode;
