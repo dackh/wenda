@@ -4,6 +4,7 @@ import java.util.List;
 
 import org.apache.ibatis.annotations.Insert;
 import org.apache.ibatis.annotations.Mapper;
+import org.apache.ibatis.annotations.Param;
 import org.apache.ibatis.annotations.Select;
 import org.apache.ibatis.annotations.Update;
 
@@ -24,16 +25,16 @@ public interface CommentDao {
 	int updateCommentContent(String content,int id);
 	
 	@Update({"update",TABLE_NAME,"set status = #{status} where id = #{id}"})
-	int updateCommentStatus(int id,int status);
+	int updateCommentStatus(@Param("id")int id,@Param("status")int status);
 	
 	@Select({"select count(id) from",TABLE_NAME,
 		"where entity_id = #{entityId} and entity_type= #{entityType} and status=0"})
-    int getCommentCount(int entityId,int entityType);
+    int getCommentCount(@Param("entityId")int entityId,@Param("entityType")int entityType);
     
     @Select({"select",SELECT_FIELDS,"from",TABLE_NAME,
     	"where entity_id = #{entityId} and entity_type= #{entityType} and status=0"})
-    List<Comment> queryComment(int entity_id,int entity_type);
+    List<Comment> queryComment(@Param("entityId")int entityId,@Param("entityType")int entityType);
     
     @Select({"select",SELECT_FIELDS,"from",TABLE_NAME,"where id = #{id} and status=0"})
-    Comment getCommentById(int id);
+    Comment getCommentById(@Param("id")int id);
 }

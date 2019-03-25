@@ -89,9 +89,9 @@ public class CommentController {
 	
 	@RequestMapping("/updateCommentContent")
 	public Result updateCommentContent(@RequestParam("content")String content,
-			@RequestParam("commentId")int commentId){
+			@RequestParam("id")int id){
 		try{	
-			if(commentService.updateCommentContent(content, commentId) > 0){
+			if(commentService.updateCommentContent(content, id) > 0){
 				return new Result(Errcode.Null,"修改成功");
 			}
 		}catch (Exception e) {
@@ -101,9 +101,9 @@ public class CommentController {
 	}
 	
 	@RequestMapping("deleteComment")
-	public Result deleteComment(@RequestParam("commentId")int commentId){
+	public Result deleteComment(@RequestParam("id")int id){
 		try{	
-			if(commentService.deleteComment(commentId) > 0){
+			if(commentService.deleteComment(id) > 0){
 				return new Result(Errcode.Null,"删除成功");
 			}
 		}catch (Exception e) {
@@ -113,10 +113,10 @@ public class CommentController {
 	}
 	
 	@RequestMapping("queryComment")
-	public Result queryComment(@RequestParam("entity_id")int entity_id,
-			@RequestParam("entity_type")int entity_type){
+	public Result queryComment(@RequestParam("entityId")int entityId,
+			@RequestParam("entityType")int entityType){
 		try{	
-			List<Comment> queryComment = commentService.queryComment(entity_id,entity_type);
+			List<Comment> queryComment = commentService.queryComment(entityId,entityType);
 			Result result = new Result(Errcode.Null,"查找成功");
 			result.setRes(queryComment);
 			return result;

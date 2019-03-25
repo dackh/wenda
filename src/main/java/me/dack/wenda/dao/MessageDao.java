@@ -28,14 +28,14 @@ public interface MessageDao {
 			@Param("offset") int offset,@Param("limit")int limit);
 	
 	@Select({"select",INSERT_FIELDS,",count(id) as id from (select ",SELECT_FIELDS,"from",TABLE_NAME,
-		"where from_id=#{userId} or to_id=#{userId} order by create_time desc) t group by conversation_id order by create_time"
-		+ "limit #{offset},#{limit}"})
+		"where from_id=#{userId} or to_id=#{userId} order by create_time desc) t group by conversation_id order by create_time desc"
+		, "limit #{offset},#{limit}"})
 	public List<Message> getConversationList(@Param("userId")int userId,
 			@Param("offset")int offset,@Param("limit")int limit);
 	
 	@Select({"select count(id) from",TABLE_NAME,"where has_read = 0 and to_id=#{userId} and conversation_id=#{conversationId}"})
 	public int getConversationUnReadCount(@Param("userId")int userId,@Param("conversationId")String conversationId);
 	
-	@Update({"update",TABLE_NAME,"set has_read=1 where to_id=#{userId} and conversation_id=#{conversationId}"})
+	@Update({"update",TABLE_NAME,"set has_read = 1 where to_id=#{userId} and conversation_id=#{conversationId}"})
 	public int updateConversationHasRead(@Param("userId")int userId,@Param("conversationId")String conversationId);
 }

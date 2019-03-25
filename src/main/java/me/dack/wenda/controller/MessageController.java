@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import me.dack.wenda.model.Errcode;
@@ -31,7 +32,7 @@ public class MessageController {
 	
 	@RequestMapping("/addMessage")
 	@ResponseBody
-	public Result addMessage(int toId,String content){
+	public Result addMessage(@RequestParam("toId")int toId,@RequestParam("content")String content){
 		Message message = new Message();
 		User user = hostHolder.getUser();
 		message.setFromId(user.getId()); 
@@ -52,7 +53,8 @@ public class MessageController {
 	
 	@RequestMapping("/getConversationDetail")
 	@ResponseBody
-	public Result getConversationDetail(String conversationId,int offset,int limit){
+	public Result getConversationDetail(@RequestParam("conversationId")String conversationId
+			,@RequestParam("offset")int offset,@RequestParam("limit")int limit){
 		try{
 			List<Message> conversationDetail = messageService.getConversationDetail(conversationId, offset, limit);
 			Result result = new Result(Errcode.Null,"查找成功");
@@ -66,9 +68,10 @@ public class MessageController {
 	
 	@RequestMapping("/getConversationList")
 	@ResponseBody
-	public Result getConversationList(int userId,int offset,int limit){
+	public Result getConversationList(@RequestParam("offset")int offset,@RequestParam("limit")int limit){
 		try{
-			List<Message> conversationList = messageService.getConversationList(userId, offset, limit);
+			User user = hostHolder.getUser();
+			List<Message> conversationList = messageService.getConversationList(user.getId(), offset, limit);
 			Result result = new Result(Errcode.Null,"查找成功");
 			result.setRes(conversationList);
 			return result;
@@ -80,9 +83,10 @@ public class MessageController {
 	
 	@RequestMapping("/getConversationUnReadCount")
 	@ResponseBody
-	public Result getConversationUnReadCount(int userId,String conversationId){
+	public Result getConversationUnReadCount(@RequestParam("conversationId")String conversationId){
 		try{
-			int conversationUnReadCount = messageService.getConversationUnReadCount(userId, conversationId);
+			User user = hostHolder.getUser();
+			int conversationUnReadCount = messageService.getConversationUnReadCount(user.getId(), conversationId);
 			Result result = new Result(Errcode.Null,"查找成功");
 			result.setRes(conversationUnReadCount);
 			return result;
@@ -94,9 +98,10 @@ public class MessageController {
 	
 	@RequestMapping("/updateConversationHasRead")
 	@ResponseBody
-	public Result updateConversationHasRead(int userId,String conversationId){
+	public Result updateConversationHasRead(@RequestParam("conversationId")String conversationId){
 		try{
-			if(messageService.updateConversationHasRead(userId, conversationId) > 0){
+			User user = hostHolder.getUser();
+			if(messageService.updateConversationHasRead(user.getId(), conversationId) > 0){
 				Result result = new Result(Errcode.Null,"修改成功");
 				return result;
 			}

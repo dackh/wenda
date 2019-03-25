@@ -2,6 +2,7 @@ package me.dack.wenda.dao;
 
 import org.apache.ibatis.annotations.Insert;
 import org.apache.ibatis.annotations.Mapper;
+import org.apache.ibatis.annotations.Param;
 import org.apache.ibatis.annotations.Select;
 import org.apache.ibatis.annotations.Update;
 
@@ -22,11 +23,11 @@ public interface UserDao {
 	public int updatePassword(User user);
 	
 	@Select({"select",SELECT_FIELDS,"from",TABLE_NAME,"where id=#{id}"})
-	public User getUserById(int id);
+	public User getUserById(@Param("id")int id);
 	
 	@Select({"select",SELECT_FIELDS,"from",TABLE_NAME ,"where name=#{name}"})
-	public User getUserByName(String name);
+	public User getUserByName(@Param("name")String name);
 	
 	@Select({"select",SELECT_FIELDS,"from",TABLE_NAME ,"where username=#{username}"})
-	public User getUserByUserName(String username);
+	public User getUserByUserName(@Param("username")String username);
 }

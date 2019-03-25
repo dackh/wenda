@@ -45,8 +45,8 @@ public class CommentService {
 		return commentDao.updateCommentStatus(id, 1);
 	}
 	
-	public List<Comment> queryComment(int entity_id,int entity_type){
-		return commentDao.queryComment(entity_id, entity_type);
+	public List<Comment> queryComment(int entityId,int entityType){
+		return commentDao.queryComment(entityId, entityType);
 	}
 	
 	public Comment getCommentById(int id) {
