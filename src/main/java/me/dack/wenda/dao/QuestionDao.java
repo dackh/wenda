@@ -16,7 +16,6 @@ public interface QuestionDao {
 	String INSERT_FIELDS = " title, content, create_time, comment_count, status, user_id";
 	String SELECT_FIELDS = "id," + INSERT_FIELDS;
 	
-	@Select({"select ",SELECT_FIELDS," from ",TABLE_NAME," where user_id=#{userId} and status = 0 order by create_time desc limit #{offset} ,#{limit}"})
 	List<Question> getLatestQuestions(@Param("userId") int userId,@Param("offset")int offset,
 							@Param("limit")int limit);
 	

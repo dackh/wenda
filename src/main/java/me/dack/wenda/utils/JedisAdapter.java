@@ -236,4 +236,14 @@ public class JedisAdapter implements InitializingBean{
 		}
     	return null;
     }
+    
+    public long zadd(String key,String value){
+    	
+    	return 1;
+    }
+    
+//    public List<Integer> zrevrange(String key,int offset,int limit){
+//    	
+//    	return new ArrayList<Integer>;
+//    }
 }

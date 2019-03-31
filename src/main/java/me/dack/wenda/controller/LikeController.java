@@ -46,9 +46,7 @@ public class LikeController {
 					.setActorId(hostHolder.getUser().getId())
 					.setEntityId(EntityType.COMMENT_ENTITY)
 					.setEntityOwnerId(comment.getUserId())
-					.setExt("questionId", String.valueOf(comment.getEntityId())));
-			
-			
+					.setExt("questionId", String.valueOf(comment.getEntityId())));		
 			
 			long likeCount = likeService.like(hostHolder.getUser().getId(), EntityType.COMMENT_ENTITY, comment.getEntityId());
 			Result result =  new Result(Errcode.Null,"点赞成功");

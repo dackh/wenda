@@ -13,10 +13,11 @@ import me.dack.wenda.model.Question;
 public class QuestionService {
 
 	@Autowired
-	QuestionDao questionDao;
+	private QuestionDao questionDao;
 	
 	@Autowired
-	SensitiveService sensitiveService;
+	private SensitiveService sensitiveService;
+		
 	
 	public int addQuestion(Question question){
 		question.setTitle(HtmlUtils.htmlEscape(question.getTitle()));

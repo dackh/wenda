@@ -73,6 +73,16 @@ public class QuestionController {
 		return result;
 	}
 	
+	@RequestMapping("/getRecommandQuestions")
+	@ResponseBody	
+	public Result getRecommandQuestions(@RequestParam("offset")int offset,
+			@RequestParam("limit")int limit){
+		
+		
+		
+		return new Result(Errcode.Error,"查找失败");
+	}
+	
 	@RequestMapping("/updateQuestion")
 	@ResponseBody
 	public Result updateQuestion(@RequestParam("id")int id,@RequestParam("title")String title,
