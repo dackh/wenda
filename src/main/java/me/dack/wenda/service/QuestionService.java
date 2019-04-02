@@ -1,6 +1,8 @@
 package me.dack.wenda.service;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -8,6 +10,8 @@ import org.springframework.web.util.HtmlUtils;
 
 import me.dack.wenda.dao.QuestionDao;
 import me.dack.wenda.model.Question;
+import me.dack.wenda.utils.JedisAdapter;
+import me.dack.wenda.utils.RedisKeyUtils;
 
 @Service
 public class QuestionService {
@@ -17,6 +21,9 @@ public class QuestionService {
 	
 	@Autowired
 	private SensitiveService sensitiveService;
+	
+	@Autowired
+	private JedisAdapter adapter;
 		
 	
 	public int addQuestion(Question question){
@@ -32,6 +39,17 @@ public class QuestionService {
 	
 	public List<Question> getLatestQuestions(int userId,int offset,int limit){
 		return questionDao.getLatestQuestions(userId, offset, limit);
+	}
+	
+	public List<Question> getRecommandQuestions(int offset,int limit){
+		String recommendKey = RedisKeyUtils.getRecommendKey();
+		Set<String> zrevrange = adapter.zrevrange(recommendKey, offset, limit);
+		List<Question> list = new ArrayList<>();
+		for(String key : zrevrange) {
+			Question question = questionDao.getQuestionById(Integer.parseInt(key));
+			list.add(question);
+		}
+		return list;
 	}
 	
 	public int updateQuestionCount(int id,int commentCount){

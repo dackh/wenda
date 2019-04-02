@@ -67,9 +67,13 @@ public class CommentController {
 						.setEntityType(entityType)
 						.setEntityOwnerId(question.getUserId())
 						.setExt("questionId", String.valueOf(entityId)));
+				questionService.updateQuestionCount(entityId, questionService.getQuestionById(entityId).getCommentCount()+1);
 			}else {
 				return new Result(Errcode.Error,"参数entity_type值异常");
 			}
+			eventProducer.produceEvent(new EventModel(EventType.RECOMMEND)
+					.setEntityId(entityId));
+			
 			Comment comment = new Comment();
 			comment.setContent(content);
 			comment.setEntityId(entityId);

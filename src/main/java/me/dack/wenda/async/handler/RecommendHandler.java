@@ -38,11 +38,11 @@ public class RecommendHandler implements EventHandler{
 		Question question = questionService.getQuestionById(model.getEntityId());
 		int Qanswers = question.getCommentCount();	//问题评论数
 		
-		long Qscore = 0;		//问题得分 = 问题的点赞数 - 点踩数
-		String likeQuestionKey = RedisKeyUtils.getLikeKey(EntityType.QUESTION_ENTITY, model.getEntityId());
-		Qscore += adapter.scard(likeQuestionKey);
-		String disLikeQuestionKey = RedisKeyUtils.getDisLikeKey(EntityType.QUESTION_ENTITY, model.getEntityId());
-		Qscore -= adapter.scard(disLikeQuestionKey);			
+		long Qscore = 10;		//问题得分 = 问题的点赞数 - 点踩数
+//		String likeQuestionKey = RedisKeyUtils.getLikeKey(EntityType.QUESTION_ENTITY, model.getEntityId());
+//		Qscore += adapter.scard(likeQuestionKey);
+//		String disLikeQuestionKey = RedisKeyUtils.getDisLikeKey(EntityType.QUESTION_ENTITY, model.getEntityId());
+//		Qscore -= adapter.scard(disLikeQuestionKey);			
 		
 		long Ascores = 0;		//回答得分 = 回答的点赞数 - 点踩数
 		List<Comment> queryComment = commentService.queryComment(model.getEntityId(), EntityType.QUESTION_ENTITY);
@@ -58,9 +58,12 @@ public class RecommendHandler implements EventHandler{
 		long Qage = now.getTime() - question.getCreateTime().getTime();
 		long Qupdated = queryComment.isEmpty() ? 0 : queryComment.get(0).getCreateTime().getTime();
 		
-		double QuestionScore = ((Qscore + Qanswers) / 5 + Ascores ) / (Qage + 1 - Math.pow(((Qage - Qupdated) / 2),1.5));
-		
-		
+//		double QuestionScore = ((Qscore + Qanswers) / 5 + Ascores ) / (Qage + 1 - Math.pow(((Qage - Qupdated) / 2),1.5));
+//		double QuestionScore = ((Qscore + Qanswers) / 5 + Ascores ) / (Math.pow(((Qage - Qupdated) / 2),1.5));
+//		System.out.println(QuestionScore);
+		String recommendKey = RedisKeyUtils.getRecommendKey();
+//		adapter.zadd(recommendKey,QuestionScore, String.valueOf(model.getEntityId()),7 * 24 * 60 * 60);
+		adapter.zadd(recommendKey,100, String.valueOf(model.getEntityId()),7 * 24 * 60 * 60);
 	}
 
 	@Override

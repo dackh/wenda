@@ -237,9 +237,20 @@ public class JedisAdapter implements InitializingBean{
     	return null;
     }
     
-    public long zadd(String key,String value){
-    	
-    	return 1;
+    public long zadd(String key,double score,String number,int expire){
+    	Jedis jedis = null;
+    	try {
+    		jedis = pool.getResource();    	
+    		jedis.zadd(key,score,number);
+    		return jedis.expire(key, expire);
+    	}catch (Exception e) {
+    		logger.error("发生异常"+e.getMessage());
+    	}finally {
+    		if(jedis != null) {
+				jedis.close();
+			}
+    	}
+    	return 0;
     }
     
 //    public List<Integer> zrevrange(String key,int offset,int limit){

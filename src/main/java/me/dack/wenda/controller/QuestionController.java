@@ -78,8 +78,14 @@ public class QuestionController {
 	public Result getRecommandQuestions(@RequestParam("offset")int offset,
 			@RequestParam("limit")int limit){
 		
-		
-		
+		try {
+			List<Question> recommandQuestions = questionService.getRecommandQuestions(offset, limit);
+			Result result = new Result(Errcode.Null,"查找成功");
+			result.setRes(recommandQuestions);
+			return result;
+		}catch (Exception e) {
+			logger.error("查看推荐问题失败"+e.getMessage());
+		}		
 		return new Result(Errcode.Error,"查找失败");
 	}
 	

@@ -15,7 +15,7 @@ import me.dack.wenda.model.User;
 import me.dack.wenda.service.MessageService;
 import me.dack.wenda.service.UserService;
 @Component
-public class commentHandler implements EventHandler{
+public class CommentHandler implements EventHandler{
 
 	@Autowired
 	private UserService userService;
