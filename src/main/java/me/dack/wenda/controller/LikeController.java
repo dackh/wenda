@@ -3,11 +3,11 @@ package me.dack.wenda.controller;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.RestController;
 
 import me.dack.wenda.async.EventModel;
 import me.dack.wenda.async.EventProducer;
@@ -20,7 +20,8 @@ import me.dack.wenda.model.Result;
 import me.dack.wenda.service.CommentService;
 import me.dack.wenda.service.LikeService;
 
-@Controller("/like")
+@RestController
+@RequestMapping("/like")
 @CrossOrigin
 public class LikeController {
 
@@ -36,10 +37,13 @@ public class LikeController {
 	@Autowired
 	private CommentService commentService;
 	
+
+	//先只做评论的点赞，问题的点赞后续再加上
 	@RequestMapping("/like")
 	@ResponseBody
 	public Result Like(@RequestParam("commentId")int commentId) {
 		
+		//TODO   每次调用接口都会发送消息
 		try{
 			Comment comment = commentService.getCommentById(commentId);
 			eventProducer.produceEvent(new EventModel(EventType.LIKE)
@@ -64,7 +68,7 @@ public class LikeController {
 		
 		try{
 			Comment comment = commentService.getCommentById(commentId);
-			long likeCount = likeService.disLike(0, EntityType.COMMENT_ENTITY, comment.getEntityId());
+			long likeCount = likeService.disLike(hostHolder.getUser().getId(), EntityType.COMMENT_ENTITY, comment.getEntityId());
 			Result result =  new Result(Errcode.Null,"点赞成功");
 			result.setRes(likeCount);
 			return result;
@@ -74,13 +78,28 @@ public class LikeController {
 		return new Result(Errcode.Error,"点赞失败");
 	}
 	
+	// @RequestMapping("/getLikeCount")
+	// @ResponseBody
+	// public Result getLikeCount(@RequestParam("entityType")int entityType,
+	// 		@RequestParam("entityId")int entityId) {
+		
+	// 	try{
+	// 		long likeCount = likeService.getLikeCount(entityType, entityId);
+	// 		Result result =  new Result(Errcode.Null,"获取成功");
+	// 		result.setRes(likeCount);
+	// 		return result;
+	// 	}catch (Exception e) {
+	// 		logger.error("获取点赞数失败"+e.getMessage());
+	// 	}
+	// 	return new Result(Errcode.Error,"获取失败");
+	// }
 	@RequestMapping("/getLikeCount")
 	@ResponseBody
-	public Result getLikeCount(@RequestParam("entityType")int entityType,
-			@RequestParam("entityId")int entityId) {
+	public Result getLikeCount(@RequestParam("commentId")int commentId) {
 		
 		try{
-			long likeCount = likeService.getLikeCount(entityType, entityId);
+			Comment comment = commentService.getCommentById(commentId);
+			long likeCount = likeService.getLikeCount(EntityType.COMMENT_ENTITY, comment.getEntityId());
 			Result result =  new Result(Errcode.Null,"获取成功");
 			result.setRes(likeCount);
 			return result;
@@ -96,7 +115,7 @@ public class LikeController {
 		
 		try{
 			Comment comment = commentService.getCommentById(commentId);
-			long likeCount = likeService.getLikeStatus(0,EntityType.COMMENT_ENTITY, comment.getEntityId());
+			long likeCount = likeService.getLikeStatus(hostHolder.getUser().getId(),EntityType.COMMENT_ENTITY, comment.getEntityId());
 			Result result =  new Result(Errcode.Null,"获取成功");
 			result.setRes(likeCount);
 			return result;

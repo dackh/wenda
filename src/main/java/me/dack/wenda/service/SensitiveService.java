@@ -131,7 +131,6 @@ public class SensitiveService implements InitializingBean{
 				continue;
 			}
 			
-			
 			tempNode = tempNode.getSubNode(c);
 			if(tempNode == null){
 				result.append(text.charAt(begin));
