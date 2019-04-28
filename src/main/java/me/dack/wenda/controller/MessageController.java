@@ -1,5 +1,6 @@
 package me.dack.wenda.controller;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -12,6 +13,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import me.dack.wenda.dto.MessageListDto;
 import me.dack.wenda.model.Errcode;
 import me.dack.wenda.model.HostHolder;
 import me.dack.wenda.model.Message;
@@ -72,30 +74,23 @@ public class MessageController {
 		try{
 			User user = hostHolder.getUser();
 			List<Message> conversationList = messageService.getConversationList(user.getId(), offset, limit);
+			List<MessageListDto> messageListDtos = new ArrayList<>();
+			for(Message message : conversationList){
+				MessageListDto messageListDto = new MessageListDto();
+				messageListDto.setMessage(message);
+				messageListDto.setUnReadCount(messageService.getConversationUnReadCount(user.getId(), message.getConversationId()));
+				messageListDtos.add(messageListDto);
+			}
+
 			Result result = new Result(Errcode.Null,"查找成功");
-			result.setRes(conversationList);
+			result.setRes(messageListDtos);
 			return result;
 		}catch (Exception e) {
 			logger.error("查找会话消息列表失败，"+e.getMessage());
 		}
 		return new Result(Errcode.Error,"查找失败");
 	}
-	
-	@RequestMapping("/getConversationUnReadCount")
-	@ResponseBody
-	public Result getConversationUnReadCount(@RequestParam("conversationId")String conversationId){
-		try{
-			User user = hostHolder.getUser();
-			int conversationUnReadCount = messageService.getConversationUnReadCount(user.getId(), conversationId);
-			Result result = new Result(Errcode.Null,"查找成功");
-			result.setRes(conversationUnReadCount);
-			return result;
-		}catch (Exception e) {
-			logger.error("查找未读消息数量失败，"+e.getMessage());
-		}
-		return new Result(Errcode.Error,"查找失败");
-	}
-	
+
 	@RequestMapping("/updateConversationHasRead")
 	@ResponseBody
 	public Result updateConversationHasRead(@RequestParam("conversationId")String conversationId){

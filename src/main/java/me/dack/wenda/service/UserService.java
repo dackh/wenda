@@ -56,7 +56,7 @@ public class UserService {
 		String salt = UUID.randomUUID().toString().substring(0,5);
 		user.setSalt(salt);
 		user.setPassword(MD5Util.MD5(password+user.getSalt()));
-		user.setHeadUrl("head_url");
+		user.setHeadUrl("https://pic4.zhimg.com/aadd7b895_s.jpg");
 		userDao.addUser(user);
 		result.setErrcode(Errcode.Null);
 		result.setMessage("注册成功");
