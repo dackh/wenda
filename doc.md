@@ -274,7 +274,7 @@
 	    "res": null
 	}
 
-## 添加（发送）消息
+## 获取会话信息
 #### /message/getConversationDetail
 
 #### 请求参数
