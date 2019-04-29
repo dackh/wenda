@@ -41,11 +41,14 @@ public class FollowController {
 	private UserService userService;
 
 	
-	@RequestMapping("/follwe")
+	@RequestMapping("/follow")
 	@ResponseBody
 	public Result follweUser(@RequestParam("userId")int userId) {
 		
 		User user = hostHolder.getUser();
+		if( user.getId() == userId ){
+			return new Result(Errcode.Error,"不能关注自己");
+		}
 		try{
 			eventProducer.produceEvent(new EventModel(EventType.FOLLOW)
 					.setActorId(user.getId())
@@ -65,14 +68,16 @@ public class FollowController {
 		return new Result(Errcode.Error,"点赞失败");
 	}
 	
-	@RequestMapping("unFollowUser")
+	@RequestMapping("unFollow")
 	@ResponseBody
 	public Result unFollowUser(@RequestParam("userId")int userId){
 		User user = hostHolder.getUser();
 		try {
-			boolean ret = followService.unFollow(user.getId(), user.getId(), userId);
+			boolean ret = followService.unFollow(user.getId(),  EntityType.USER_ENTITY, userId);
+			long followerCount = followService.getFollowerCount(EntityType.USER_ENTITY, userId);
 			if(ret){
 				Result result = new Result(Errcode.Null,"取消关注成功");
+				result.setRes(followerCount);
 				return result;
 			}
 		} catch (Exception e) {
@@ -122,7 +127,7 @@ public class FollowController {
 		try{
 			boolean isFollower = followService.isFollower(user.getId(),EntityType.USER_ENTITY, userId);
 			Result result = new Result(Errcode.Null,"查看成功");
-			result.setRes(isFollower);
+			result.setRes(isFollower ? 1 : 0);
 			return result;
 		}catch(Exception e){
 			logger.error("查看是否关注某用户失败", e.getMessage());

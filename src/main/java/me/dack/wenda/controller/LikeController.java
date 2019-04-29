@@ -52,12 +52,12 @@ public class LikeController {
 					.setEntityOwnerId(comment.getUserId())
 					.setExt("questionId", String.valueOf(comment.getEntityId())));		
 			
-			long likeCount = likeService.like(hostHolder.getUser().getId(), EntityType.COMMENT_ENTITY, comment.getEntityId());
+			long likeCount = likeService.like(hostHolder.getUser().getId(), comment.getEntityType(), comment.getEntityId());
 			Result result =  new Result(Errcode.Null,"点赞成功");
 			result.setRes(likeCount);
 			return result;
 		}catch (Exception e) {
-			logger.error("点赞喜欢失败"+e.getMessage());
+			logger.error("点赞喜欢失败"+e);
 		}
 		return new Result(Errcode.Error,"点赞失败");
 	}
@@ -68,8 +68,8 @@ public class LikeController {
 		
 		try{
 			Comment comment = commentService.getCommentById(commentId);
-			long likeCount = likeService.disLike(hostHolder.getUser().getId(), EntityType.COMMENT_ENTITY, comment.getEntityId());
-			Result result =  new Result(Errcode.Null,"点赞成功");
+			long likeCount = likeService.disLike(hostHolder.getUser().getId(), comment.getEntityType() ,comment.getEntityId());
+			Result result =  new Result(Errcode.Null,"点踩成功");
 			result.setRes(likeCount);
 			return result;
 		}catch (Exception e) {
@@ -99,7 +99,7 @@ public class LikeController {
 		
 		try{
 			Comment comment = commentService.getCommentById(commentId);
-			long likeCount = likeService.getLikeCount(EntityType.COMMENT_ENTITY, comment.getEntityId());
+			long likeCount = likeService.getLikeCount(comment.getEntityType(), comment.getEntityId());
 			Result result =  new Result(Errcode.Null,"获取成功");
 			result.setRes(likeCount);
 			return result;
@@ -115,7 +115,7 @@ public class LikeController {
 		
 		try{
 			Comment comment = commentService.getCommentById(commentId);
-			long likeCount = likeService.getLikeStatus(hostHolder.getUser().getId(),EntityType.COMMENT_ENTITY, comment.getEntityId());
+			long likeCount = likeService.getLikeStatus(hostHolder.getUser().getId(),comment.getEntityType(), comment.getEntityId());
 			Result result =  new Result(Errcode.Null,"获取成功");
 			result.setRes(likeCount);
 			return result;

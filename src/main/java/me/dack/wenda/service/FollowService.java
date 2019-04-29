@@ -59,8 +59,8 @@ public class FollowService {
 		return adapter.zcard(followerKey);
 	}
 	
-	public long getFolloweeCount(int userId,int entityType) {
-		String followeeKey = RedisKeyUtils.getFolloweeKey(userId, entityType);
+	public long getFolloweeCount(int entityType,int entityId) {
+		String followeeKey = RedisKeyUtils.getFolloweeKey(entityId, entityType);
 		return adapter.zcard(followeeKey);
 	}
 	
