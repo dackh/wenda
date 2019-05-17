@@ -3,9 +3,9 @@
 ## 服务器地址：119.23.227.157:8080
 #### 请求返回格式都是
 	{
-		"errcode": 3,									//请求是否成功  true为成功，false为失败
-		"message": "账号和密码不匹配"						//提示信息
-		"result":										//返回参数
+		"errcode": 3,					//请求是否成功  0为成功，2为token验证不通过，3为fail
+		"message": "账号和密码不匹配"			  //提示信息
+		"result":					//返回参数
 	}
 #### 1、用户登陆成功之后会返回一个Token字符串，这个Token用于身份验证，在请求其他的Api都需要在请求头Authorization带上这个Token，这个Token默认30分钟过期，需要重新登陆
 
@@ -20,7 +20,7 @@
 	
 
 
-![](https://i.imgur.com/8eh2bIK.png)
+![](https://camo.githubusercontent.com/778e8ab0c4a348d9f422ec38f872ffc34caad4f3/68747470733a2f2f7365676d656e746661756c742e636f6d2f696d672f6256627345364d)
 
 
 # User
@@ -170,7 +170,7 @@
 ## 添加评论
 #### /comment/addComment
 
-####请求参数
+#### 请求参数
 | 参数 | 类型 | 含义 |
 | ------ | ----- | ------ |
 |content|string|评论内容|
