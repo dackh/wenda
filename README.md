@@ -1,6 +1,8 @@
 # wenda
 A question and answer website like zhihu 
 
+### 毕设作品，感兴趣的可以看下，这里只是服务端接口，前台页面另一个同学写的。
+
 ### 模仿知乎一个web网站，前端页面还在写，这里只提供接口
 
 ### 技术点
